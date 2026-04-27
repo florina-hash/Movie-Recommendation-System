@@ -1,6 +1,7 @@
 # Movie Recommendation System 🎬
 
 A Content-Based Movie Recommender built with Python that suggests movies based on their plot descriptions and genres.
+
 🚀 Features
 * **Natural Language Processing:** Uses **CountVectorizer** to turn text data into mathematical vectors.
 * **Smart Recommendations:** Implements **Cosine Similarity** to calculate the distance between movies.
