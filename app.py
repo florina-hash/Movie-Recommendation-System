@@ -3,87 +3,75 @@ import pickle
 import pandas as pd
 
 # Page Configuration
-st.set_page_config(page_title="NEO-RECOM v1.0", page_icon="📡", layout="centered")
+st.set_page_config(page_title="Cine-Match AI", page_icon="🎬", layout="centered")
 
 st.markdown("""
     <style>
-    /* Main app background */
     .stApp {
-        background-color: #050509; /* Very deep, dark blue-black */
-        color: #e0fbfc; /* Light cyan text */
+        background-color: #050509;
+        color: #e0fbfc;
     }
 
-    /* Titles and headers */
     h1 {
-        color: #00f3ff; /* Electric Cyan */
+        color: #00f3ff;
         text-align: center;
-        text-transform: uppercase;
-        font-family: 'Courier New', monospace;
-        letter-spacing: 3px;
-        text-shadow: 0 0 10px #00f3ff, 0 0 20px #00f3ff;
-    }
-    .subheader {
-        color: #ff0055; /* Neo Pink/Magenta accent */
-        text-align: center;
-        font-family: 'Courier New', monospace;
-        letter-spacing: 1px;
+        font-family: 'Segoe UI', sans-serif;
+        font-weight: 800;
+        letter-spacing: 2px;
+        text-shadow: 2px 2px 10px rgba(0, 243, 255, 0.5);
     }
 
-    /* The Main Button */
+    /* Fixing that weird green box (st.success) */
+    .stAlert {
+        background-color: #0a0a12 !important;
+        color: #00f3ff !important;
+        border: 1px solid #00f3ff !important;
+        border-radius: 5px !important;
+    }
+    .stAlert p {
+        color: #00f3ff !important;
+        font-weight: bold;
+    }
+
+    /* Button Styling */
     .stButton>button {
         width: 100%;
-        border-radius: 2px; /* Less rounded, more blocky */
+        border-radius: 5px;
         height: 3em;
-        background-color: #050509;
+        background-color: transparent;
         color: #00f3ff;
         font-weight: bold;
-        text-transform: uppercase;
-        border: 2px solid #00f3ff; /* Electric border */
-        font-family: 'Courier New', monospace;
-        box-shadow: 0 0 10px #00f3ff;
-        transition: 0.3s;
+        border: 2px solid #00f3ff;
+        transition: 0.4s;
     }
     .stButton>button:hover {
         background-color: #00f3ff;
         color: #050509;
-        box-shadow: 0 0 20px #00f3ff, 0 0 30px #ff0055;
+        box-shadow: 0 0 20px #00f3ff;
     }
 
-    /* Recommendation Cards */
+    /* Movie Cards */
     .movie-card {
-        background-color: #0a0a12; /* Slightly lighter dark blue */
-        padding: 15px;
-        border-radius: 0px; /* Sharp corners */
-        border: 1px solid #00f3ff; /* Thin cyan border */
-        margin-bottom: 15px;
-        box-shadow: inset 0 0 10px rgba(0, 243, 255, 0.2);
+        background-color: #0a0a12;
+        padding: 20px;
+        border-radius: 8px;
+        border: 1px solid #333;
+        margin-bottom: 12px;
+        transition: 0.3s;
     }
     .movie-card:hover {
-        border: 1px solid #ff0055; /* Hover turns border magenta */
-        box-shadow: inset 0 0 15px rgba(255, 0, 85, 0.3), 0 0 10px rgba(0, 243, 255, 0.3);
-    }
-
-    /* Success Message styling */
-    .stAlert {
-        background-color: #0a0a12;
-        border: 1px solid #ff0055; /* Magenta border */
-        color: #ff0055;
-        border-radius: 0px;
-    }
-    
-    /* Text Input/Selectbox labels */
-    label {
-        color: #00f3ff !important;
-        font-family: 'Courier New', monospace !important;
+        border: 1px solid #ff0055;
+        transform: scale(1.02);
     }
     </style>
     """, unsafe_allow_html=True)
 
-#  App Title & Subheader
-st.markdown("<h1>> NEO-RECOM v1.0</h1>", unsafe_allow_html=True)
-st.markdown("<p class='subheader'>> AI-Driven Movie Analysis Interface</p>", unsafe_allow_html=True)
+# Header
+st.markdown("<h1>CINE-MATCH AI</h1>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; color: #ff0055;'>MACHINE LEARNING MOVIE INTELLIGENCE</p>", unsafe_allow_html=True)
 st.write("---")
 
+#  Load Data
 movies_dict = pickle.load(open('movie_dict.pkl','rb'))
 movies = pd.DataFrame(movies_dict)
 similarity = pickle.load(open('similarity.pkl','rb'))
@@ -98,21 +86,20 @@ def recommend(movie):
         recommended_movies.append(movies.iloc[i[0]].title)
     return recommended_movies
 
-#  UI Layout
 selected_movie_name = st.selectbox(
-    '> INPUT_TARGET_FILM',
+    'SELECT A MOVIE YOU LIKE:',
     movies['title'].values)
 
-st.write("") # Static Spacer
+st.write("") 
 
-if st.button('RUN_SIMILARITY_MATRIX'):
-    with st.spinner('> ACCESSING NEURAL NETWORK...'):
+if st.button('GENERATE MATCHES'):
+    with st.spinner('Scanning database...'):
         recommendations = recommend(selected_movie_name)
-        st.success(f"> MATCHES FOUND FOR: {selected_movie_name.upper()}")
+        st.info(f"ANALYSIS COMPLETE: Recommendations for {selected_movie_name}")
         
         for i in recommendations:
             st.markdown(f"""
                 <div class="movie-card">
-                    <span style="color: #e0fbfc; font-size: 18px; font-weight: bold; font-family: 'Courier New', monospace;">[🎥] {i}</span>
+                    <span style="color: #e0fbfc; font-size: 18px;">✨ {i}</span>
                 </div>
             """, unsafe_allow_html=True)
